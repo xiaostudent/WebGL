@@ -1,0 +1,13 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "web"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
+  }
+}
