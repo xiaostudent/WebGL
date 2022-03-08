@@ -122,4 +122,44 @@ export class LinkList {
         }
     }
 
+    public foreach(func){
+        if(func){
+            let node=this.__header
+            while(node){
+                func(node.getData())
+                node=node.getNext()
+            }
+        }
+    }
+
+    public remove(data){
+        if(data){
+            let node=this.__header
+            while(node){
+                if(node.getData()==data){
+                    let pre=node.getPrevious()
+                    let next=node.getNext()
+                    if(!pre){ //第一个
+                        this.__header=next
+                        if(next){
+                            next.setPrevious(null)
+                        }else{
+                            this.__ender=null
+                        }
+                    }else{
+                        pre.setNext(next)
+                        if(next){
+                            next.setPrevious(pre)
+                        }else{
+                            this.__ender=pre
+                        }
+                    }
+                    break
+                }else{
+                    node=node.getNext()
+                }
+            }  
+        }
+    }
+
 }

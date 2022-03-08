@@ -1,5 +1,5 @@
 export class GLProgram {
-    private __gl 
+    protected __gl 
     private __fshader
     private __vshader
     private __program

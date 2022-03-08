@@ -1,24 +1,37 @@
 import { LinkList } from "./core/ADT/LinkList";
-import { MainGLPrograme } from "./main/MainGLProgram";
+import { Main } from "./main/Main";
 
 
 function resizeCanvas(){
 	let canvas = document.getElementById('webgl');
 	canvas["width"]=window.innerWidth
 	canvas["height"]=window.innerHeight
+	window["mainCanvas"]=canvas
+	window["resizeList"] && window["resizeList"].foreach((view)=>{
+		if(typeof(view.onResize)=="function"){
+			view.onResize()
+		}
+	})
+	window["gl"] && window["gl"].viewport(0, 0, canvas["width"], canvas["height"]);  //画布改变要改变视口变换
 }
 
-function onMouseDown(){
-
+function onMouseDown(ev){
+	window["mousedownList"] && window["mousedownList"].foreach((view)=>{
+		if(typeof(view.onMouseDown)=="function"){
+			view.onMouseDown(ev)
+		}
+	})
 }
 
 function addListeners(){
+	window["resizeList"]=new LinkList()
+	window["mousedownList"]=new LinkList()
 	window.addEventListener("resize", () => {
 		resizeCanvas()
 	})
 
-	window.addEventListener("mousedown", () => {
-		onMouseDown()
+	window["mainCanvas"] && window["mainCanvas"].addEventListener("mousedown", (ev) => {
+		onMouseDown(ev)
 	})
 }
 
@@ -30,19 +43,19 @@ function initWebgl(){
     return;
   }
   window["gl"]=gl
+  window["renderList"]=new LinkList()
 }
 
 function render(){
 	if(!window["gl"]) return
-    window["gl"].clearColor(0.0, 1.0, 0.0, 1.0);
+    window["gl"].clearColor(0.0, 0.0, 0.0, 1.0);
     window["gl"].clear(window["gl"].COLOR_BUFFER_BIT)
 	if(window["renderList"] && typeof(window["renderList"])=="object"){
-		for (let index = 0; index < window["renderList"].length; index++) {
-			const program = window["renderList"][index];
+		window["renderList"].foreach((program)=>{
 			if(typeof(program.render)=="function"){
 				program.render()
 			}
-		}
+		})
 	}
 }
 
@@ -59,20 +72,7 @@ function initHtml(){
 }
 
 function initMainProgram(){
-	var VSHADER_SOURCE =
-	'attribute vec4 a_Position;\n' +
-	'void main() {\n' +
-	'  gl_Position = a_Position;\n' +
-	'  gl_PointSize = 10.0;\n' +
-	'}\n';
-
-	var FSHADER_SOURCE =
-	'void main() {\n' +
-	'  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
-	'}\n';
-
-	var gl = window["gl"]
-	let program=new MainGLPrograme(gl,VSHADER_SOURCE,FSHADER_SOURCE)
+	new Main()
 }
 
 
@@ -82,15 +82,6 @@ function main() {
 	initWebgl()
 	initHtml()
 	initMainProgram()
-
-	let list=new LinkList()
-	list.push("1")
-	list.push("2")
-	list.print()
-	console.dir(list.shift())
-	list.unshift("3")
-	list.print()
-
 }
 
 main()
