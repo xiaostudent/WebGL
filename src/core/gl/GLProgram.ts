@@ -37,6 +37,11 @@ export class GLProgram {
         return this.__gl.getAttribLocation(this.__program, name)
     }
 
+    public getUniformLocation(name){
+      if(!this.checkAvailable()) return -1
+      return this.__gl.getUniformLocation(this.__program, name)
+  }
+
     private createProgram(){
         var vertexShader = this.loadShader(this.__gl.VERTEX_SHADER, this.__vshader);
         var fragmentShader = this.loadShader(this.__gl.FRAGMENT_SHADER, this.__fshader);

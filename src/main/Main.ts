@@ -1,3 +1,4 @@
+import { Util } from "../core/util/Util";
 import { Test1GLProgram } from "../test/Test1GLProgram";
 
 export class Main{
@@ -9,7 +10,7 @@ export class Main{
 
 
     public initProgram(){
-
+        console.dir(Util.getUrlPath())
     }
 
 

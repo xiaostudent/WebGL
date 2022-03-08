@@ -278,6 +278,11 @@ var GLProgram = /** @class */ (function () {
             return -1;
         return this.__gl.getAttribLocation(this.__program, name);
     };
+    GLProgram.prototype.getUniformLocation = function (name) {
+        if (!this.checkAvailable())
+            return -1;
+        return this.__gl.getUniformLocation(this.__program, name);
+    };
     GLProgram.prototype.createProgram = function () {
         var vertexShader = this.loadShader(this.__gl.VERTEX_SHADER, this.__vshader);
         var fragmentShader = this.loadShader(this.__gl.FRAGMENT_SHADER, this.__fshader);
@@ -336,6 +341,34 @@ var GLProgram = /** @class */ (function () {
     return GLProgram;
 }());
 exports.GLProgram = GLProgram;
+
+
+/***/ }),
+
+/***/ "./src/core/util/Util.ts":
+/*!*******************************!*\
+  !*** ./src/core/util/Util.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Util = void 0;
+var Util = /** @class */ (function () {
+    function Util() {
+    }
+    Util.getPath = function (url) {
+        var ofs = url.lastIndexOf('/');
+        return ofs > 0 ? url.substr(0, ofs + 1) : "";
+    };
+    Util.getUrlPath = function () {
+        return Util.getPath(location.protocol + "//" + location.host + location.pathname);
+    };
+    return Util;
+}());
+exports.Util = Util;
 
 
 /***/ }),
@@ -414,7 +447,7 @@ function initHtml() {
         window.requestAnimationFrame(loop);
     }
 }
-function initMainProgram() {
+function enterMain() {
     new Main_1.Main();
 }
 function main() {
@@ -422,7 +455,7 @@ function main() {
     addListeners();
     initWebgl();
     initHtml();
-    initMainProgram();
+    enterMain();
 }
 main();
 
@@ -440,6 +473,7 @@ main();
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Main = void 0;
+var Util_1 = __webpack_require__(/*! ../core/util/Util */ "./src/core/util/Util.ts");
 var Test1GLProgram_1 = __webpack_require__(/*! ../test/Test1GLProgram */ "./src/test/Test1GLProgram.ts");
 var Main = /** @class */ (function () {
     function Main() {
@@ -447,6 +481,7 @@ var Main = /** @class */ (function () {
         this.initTestProgram();
     }
     Main.prototype.initProgram = function () {
+        console.dir(Util_1.Util.getUrlPath());
     };
     Main.prototype.initTestProgram = function () {
         var VSHADER_SOURCE = 'attribute vec4 a_Position;\n' +

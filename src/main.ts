@@ -71,7 +71,7 @@ function initHtml(){
 	}
 }
 
-function initMainProgram(){
+function enterMain(){
 	new Main()
 }
 
@@ -81,7 +81,7 @@ function main() {
 	addListeners()
 	initWebgl()
 	initHtml()
-	initMainProgram()
+	enterMain()
 }
 
 main()
