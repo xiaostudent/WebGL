@@ -1,22 +1,21 @@
-import { LinkList } from "./core/ADT/LinkList";
+import { gl, g_mainCanvas, g_mousedownList, g_renderList, g_resizeList, g_timer } from "./global";
 import { Main } from "./main/Main";
 
 
 function resizeCanvas(){
-	let canvas = document.getElementById('webgl');
+	let canvas = g_mainCanvas;
 	canvas["width"]=window.innerWidth
 	canvas["height"]=window.innerHeight
-	window["mainCanvas"]=canvas
-	window["resizeList"] && window["resizeList"].foreach((view)=>{
+	g_resizeList && g_resizeList.foreach((view)=>{
 		if(typeof(view.onResize)=="function"){
 			view.onResize()
 		}
 	})
-	window["gl"] && window["gl"].viewport(0, 0, canvas["width"], canvas["height"]);  //画布改变要改变视口变换
+	gl && gl.viewport(0, 0, canvas["width"], canvas["height"]);  //画布改变要改变视口变换
 }
 
 function onMouseDown(ev){
-	window["mousedownList"] && window["mousedownList"].foreach((view)=>{
+	g_mousedownList && g_mousedownList.foreach((view)=>{
 		if(typeof(view.onMouseDown)=="function"){
 			view.onMouseDown(ev)
 		}
@@ -24,34 +23,21 @@ function onMouseDown(ev){
 }
 
 function addListeners(){
-	window["resizeList"]=new LinkList()
-	window["mousedownList"]=new LinkList()
 	window.addEventListener("resize", () => {
 		resizeCanvas()
 	})
 
-	window["mainCanvas"] && window["mainCanvas"].addEventListener("mousedown", (ev) => {
+	g_mainCanvas && g_mainCanvas.addEventListener("mousedown", (ev) => {
 		onMouseDown(ev)
 	})
 }
 
-function initWebgl(){
-  let canvas = document.getElementById('webgl');
-  let gl = window["getWebGLContext"](canvas);
-  if (!gl) {
-    console.log('Failed to get the rendering context for WebGL');
-    return;
-  }
-  window["gl"]=gl
-  window["renderList"]=new LinkList()
-}
-
 function render(){
-	if(!window["gl"]) return
-    window["gl"].clearColor(0.0, 0.0, 0.0, 1.0);
-    window["gl"].clear(window["gl"].COLOR_BUFFER_BIT)
-	if(window["renderList"] && typeof(window["renderList"])=="object"){
-		window["renderList"].foreach((program)=>{
+	if(!gl) return
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT)
+	if(g_renderList && typeof(g_renderList)=="object"){
+		g_renderList.foreach((program)=>{
 			if(typeof(program.render)=="function"){
 				program.render()
 			}
@@ -67,6 +53,7 @@ function initHtml(){
 	window.requestAnimationFrame(loop);
 	function loop() {
 		render();
+		g_timer && g_timer.update()
 		window.requestAnimationFrame(loop);
 	}
 }
@@ -79,7 +66,6 @@ function enterMain(){
 function main() {
 	resizeCanvas()
 	addListeners()
-	initWebgl()
 	initHtml()
 	enterMain()
 }

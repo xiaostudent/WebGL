@@ -15,4 +15,10 @@ export class Util {
         return Util._basePath+ url
     }
 
+    static handler(caller,func,args){
+        return ()=>{
+            func && func.call(caller,args)
+        }
+    }
+
 }

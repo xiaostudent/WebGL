@@ -1,4 +1,5 @@
 import { GLProgram } from "../core/gl/GLProgram";
+import { g_mainCanvas, g_mousedownList } from "../global";
 
 export class Test1GLProgram extends GLProgram{
 
@@ -7,15 +8,15 @@ export class Test1GLProgram extends GLProgram{
 
 	public init(): void {
 		this.a_Position= this.getAttribLocation('a_Position');
-		window["mousedownList"] && window["mousedownList"].push(this)
+		g_mousedownList && g_mousedownList.push(this)
 	}
 
 	public onMouseDown(ev){
 		var x = ev.clientX;
 		var y = ev.clientY; 
 		var rect = ev.target.getBoundingClientRect() ;
-		x = ((x - rect.left) - window["mainCanvas"].width/2)/(window["mainCanvas"].width/2);
-		y = (window["mainCanvas"].height/2 - (y - rect.top))/(window["mainCanvas"].height/2);
+		x = ((x - rect.left) - g_mainCanvas["width"]/2)/(g_mainCanvas["width"]/2);
+		y = (g_mainCanvas["height"]/2 - (y - rect.top))/(g_mainCanvas["height"]/2);
 		console.dir([x,y])
 		this.g_points.push(x); this.g_points.push(y);
 	}
